@@ -12,10 +12,10 @@ export function Navigation() {
             key={index}
             path={route.path}
             element={
-              <route.layout>
-                <route.component />
-              </route.layout>
-            }
+                <route.layout>
+                  <route.component />
+                </route.layout>
+              }
             />
         ))}
       </Routes>

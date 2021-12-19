@@ -7,7 +7,8 @@ const routesClient = [
     path: '/',
     layout: ClientLayout,
     component: Home,
-  }
+    exact: true,
+  },
 ];
 
 export default routesClient;
