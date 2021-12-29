@@ -2,15 +2,23 @@ import React from 'react'
 import {Button, Form} from 'semantic-ui-react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
+import {loginApi} from '../../../api/auth.user'
 import './LoginForm.scss'
 
 export function LoginForm() {
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
-    onSubmit: (formValue) => {
-      console.log('LOGIN OK')
-      console.log(formValue)
+    onSubmit: async (formValue) => {
+      try {
+          const response = await loginApi(formValue);
+          const {access} = response;
+          console.log(access)
+
+      } catch (error) {
+          console.log('Error')
+          console.log(error)
+      }
     },
   });
 
