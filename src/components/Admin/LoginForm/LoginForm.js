@@ -2,6 +2,7 @@ import React from 'react'
 import {Button, Form} from 'semantic-ui-react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
+import {toast} from 'react-toastify'
 import {loginApi} from '../../../api/auth.user'
 import './LoginForm.scss'
 
@@ -16,8 +17,7 @@ export function LoginForm() {
           console.log(access)
 
       } catch (error) {
-          console.log('Error')
-          console.log(error)
+          toast.error(error.message)
       }
     },
   });
