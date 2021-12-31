@@ -7,6 +7,7 @@ export default function App() {
   return (
     <AuthProvider>
       <Navigation />
+
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
