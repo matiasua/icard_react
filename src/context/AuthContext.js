@@ -1,7 +1,7 @@
 // contexto encargado de controlar el sistema de autenticación
 
 import React , {useState, useEffect, createContext} from "react";
-import {setToken, getToken} from '../api/token'
+import {setToken, getToken, removeToken} from '../api/token'
 import {useUser} from '../hooks'
 
 
@@ -37,10 +37,17 @@ export function AuthProvider(props) {
     setAuth({token, user});
   }
 
+  const logout = () => {
+    if(auth) {
+      removeToken();
+      setAuth(null);
+    }
+  }
+
   const valueContext = {
       auth,
       login,
-      logout: () => console.log('Cerrando Sesion')
+      logout,
   };
 
   if (auth === undefined) return null;
