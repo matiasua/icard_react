@@ -1,6 +1,6 @@
 import React from 'react'
 import {LoginAdmin} from '../../pages/Admin'
-import {TopMenu} from '../../components/Admin'
+import {TopMenu, SideMenu} from '../../components/Admin'
 import {useAuth} from '../../hooks'
 import './AdminLayout.scss'
 
@@ -18,7 +18,9 @@ export function AdminLayout(props) {
         <TopMenu />
       </div>
       <div className="admin-layout__main-content">
-      {children}
+      <SideMenu>
+        {children}
+      </SideMenu>
       </div>
     </div>
   )
