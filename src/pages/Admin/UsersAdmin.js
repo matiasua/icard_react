@@ -22,6 +22,13 @@ export function UsersAdmin() {
     openCloseModal();
   }
 
+  const updateUser = (data) => {
+    setTitleModal('Editar usuario');
+    setContentModal(<AddEditUserForm onClose={openCloseModal}  onRefetch={onRefetch} user={data}/>);
+    openCloseModal();
+  }
+
+
   return (
     <div>
       <HeaderPage title = 'Usuarios' btnTitle='Nuevo usuario' btnClick={addUser}/>
@@ -30,7 +37,7 @@ export function UsersAdmin() {
           Cargando...
         </Loader>
       ) : (
-        <TableUsers users={users} />
+        <TableUsers users={users} updateUser={updateUser}/>
       )}
 
       <ModalBasic show={showModal} onClose={openCloseModal} title={titleModal} children={ContentModal}/>

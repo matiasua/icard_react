@@ -6,14 +6,19 @@ import {useUser} from '../../../../hooks'
 import './AddEditUserForm.scss'
 
 export function AddEditUserForm(props) {
-  const { onClose, onRefetch} = props
+  const { onClose, onRefetch, user } = props
   const { addUser } = useUser();
   const formik = useFormik({
-    initialValues: initialValues(),
-    validationSchema: Yup.object(newValidationSchema()),
+    initialValues: initialValues(user),
+    validationSchema: Yup.object(user ? updateSchema(): newValidationSchema()),
     validationOnChange: false,
     onSubmit: async (formValue) => {
       try {
+        if (user) {
+          await addUser(user.id, formValue)
+        } else {
+          await addUser(formValue)
+        }
         await addUser(formValue);
         onRefetch();
         onClose();
@@ -44,21 +49,21 @@ export function AddEditUserForm(props) {
           checked={formik.values.is_staff}
           onChange={(_, data) => formik.setFieldValue('is_staff', data.checked)}/> Usuario administrador
       </div>
-      <Button type='submit' primary fluid content='Crear usuario' />
+      <Button type='submit' primary fluid content= {user ? "Actualizar" :'Crear usuario'} />
     </Form>
   )
 }
 
-function initialValues () {
+function initialValues (data) {
   return {
-    username: '',
-    email: '',
-    first_name: '',
-    last_name: '',
+    username: data?.username || '',
+    email: data?.email || '',
+    first_name: data?.first_name || '',
+    last_name: data?.last_name || '',
     password: '',
     passwordConfirm: '',
-    is_active: true,
-    is_staff: false
+    is_active: data?.is_active ? true : false,
+    is_staff: data?.is_staff ? true : false,
   }
 }
 
@@ -79,5 +84,18 @@ function newValidationSchema () {
       passwordConfirm: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Las contraseñas no coinciden')
         .required('La confirmación de la contraseña es requerida'),
+  }
+}
+
+function updateSchema () {
+  return {
+    username: Yup.string().required(true),
+      email: Yup.string().required(true),
+      first_name: Yup.string(),
+      last_name: Yup.string(),
+      password: Yup.string(),
+      passwordConfirm: Yup.string(),
+      is_active: Yup.boolean().required(true),
+      is_staff: Yup.boolean().required(true),
   }
 }
