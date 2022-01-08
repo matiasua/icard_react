@@ -7,7 +7,8 @@ import './AddEditUserForm.scss'
 
 export function AddEditUserForm(props) {
   const { onClose, onRefetch, user } = props
-  const { addUser } = useUser();
+  const { addUser, updateUser } = useUser();
+
   const formik = useFormik({
     initialValues: initialValues(user),
     validationSchema: Yup.object(user ? updateSchema(): newValidationSchema()),
@@ -15,14 +16,13 @@ export function AddEditUserForm(props) {
     onSubmit: async (formValue) => {
       try {
         if (user) {
-          await addUser(user.id, formValue)
+          await updateUser(user.id, formValue)
         } else {
           await addUser(formValue)
         }
-        await addUser(formValue);
+
         onRefetch();
         onClose();
-
       } catch (error) {
         console.error(error)
       }
@@ -36,7 +36,6 @@ export function AddEditUserForm(props) {
       <Form.Input name='first_name' placeholder='Nombre' value={formik.values.first_name} onChange={formik.handleChange} error={formik.errors.first_name} />
       <Form.Input name='last_name' placeholder='Apellidos' value={formik.values.last_name} onChange={formik.handleChange} error={formik.errors.last_name} />
       <Form.Input name='password' type='password' placeholder='Contraseña' value={formik.values.password} onChange={formik.handleChange} error={formik.errors.password} />
-      <Form.Input name='passwordConfirm' type='password' placeholder='Confirmar contraseña'  value={formik.values.passwordConfirm} onChange={formik.handleChange} error={formik.errors.passwordConfirm} />
       <div className='add-edit-user-form__active'>
         <Checkbox
           toggle
@@ -61,7 +60,6 @@ function initialValues (data) {
     first_name: data?.first_name || '',
     last_name: data?.last_name || '',
     password: '',
-    passwordConfirm: '',
     is_active: data?.is_active ? true : false,
     is_staff: data?.is_staff ? true : false,
   }
@@ -71,31 +69,27 @@ function newValidationSchema () {
   return {
     username: Yup.string()
         .required('El nombre es requerido'),
-      email: Yup.string()
-        .email('El email no es válido')
-        .required('El email es requerido'),
-      first_name: Yup.string(),
-      last_name: Yup.string(),
-      is_active: Yup.boolean(),
-      is_staff: Yup.boolean(),
-      password: Yup.string()
-        .min(6, 'La contraseña debe tener al menos 6 caracteres')
-        .required('La contraseña es requerida'),
-      passwordConfirm: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Las contraseñas no coinciden')
-        .required('La confirmación de la contraseña es requerida'),
+    email: Yup.string()
+      .email('El email no es válido')
+      .required('El email es requerido'),
+    first_name: Yup.string(),
+    last_name: Yup.string(),
+    is_active: Yup.boolean(),
+    is_staff: Yup.boolean(),
+    password: Yup.string()
+      .min(6, 'La contraseña debe tener al menos 6 caracteres')
+      .required('La contraseña es requerida'),
   }
 }
 
 function updateSchema () {
   return {
     username: Yup.string().required(true),
-      email: Yup.string().required(true),
-      first_name: Yup.string(),
-      last_name: Yup.string(),
-      password: Yup.string(),
-      passwordConfirm: Yup.string(),
-      is_active: Yup.boolean().required(true),
-      is_staff: Yup.boolean().required(true),
+    email: Yup.string().required(true),
+    first_name: Yup.string(),
+    last_name: Yup.string(),
+    password: Yup.string(),
+    is_active: Yup.boolean().required(true),
+    is_staff: Yup.boolean().required(true),
   }
 }
