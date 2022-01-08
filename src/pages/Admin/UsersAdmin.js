@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Loader } from 'semantic-ui-react';
-import { HeaderPage, TableUsers }  from '../../components/Admin'
+import { HeaderPage, TableUsers, AddEditUserForm }  from '../../components/Admin'
 import {  ModalBasic } from '../../components/Common'
 import { useUser } from '../../hooks'
 
@@ -14,9 +14,15 @@ export function UsersAdmin() {
 
   const openCloseModal = () => setShowModal((prev) => !prev);
 
+  const addUser = () => {
+    setTitleModal('Nuevo usuario');
+    setContentModal(<AddEditUserForm />);
+    openCloseModal();
+  }
+
   return (
     <div>
-      <HeaderPage title = 'Usuarios' btnTitle='Nuevo usuario' btnClick={openCloseModal}/>
+      <HeaderPage title = 'Usuarios' btnTitle='Nuevo usuario' btnClick={addUser}/>
       {loading ? (
         <Loader active inline='centered'>
           Cargando...
@@ -25,7 +31,7 @@ export function UsersAdmin() {
         <TableUsers users={users} />
       )}
 
-      <ModalBasic show={showModal} onClose={openCloseModal} title='Crear usuario' children={<h2>Content...</h2>}/>
+      <ModalBasic show={showModal} onClose={openCloseModal} title={titleModal} children={ContentModal}/>
     </div>
   )
 }
